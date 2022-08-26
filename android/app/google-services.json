@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "313004097828",
+    "firebase_url": "https://starmeet-daec0-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "starmeet-daec0",
+    "storage_bucket": "starmeet-daec0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313004097828:android:182db3bde91c03564473b1",
+        "android_client_info": {
+          "package_name": "com.slmeet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "313004097828-50940o02sdccc4ba4ej8hogje6g5aed1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTya22kToVPT15euzDMYeI7_N9pOekRA4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "313004097828-50940o02sdccc4ba4ej8hogje6g5aed1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

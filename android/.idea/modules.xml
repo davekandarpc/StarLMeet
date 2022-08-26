@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1163393234/react-native-gradle-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/-1163393234/react-native-gradle-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/slmeet.iml" filepath="$PROJECT_DIR$/.idea/modules/slmeet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/slmeet.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/slmeet.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1005132661/slmeet.react-native-fast-image.iml" filepath="$PROJECT_DIR$/.idea/modules/1005132661/slmeet.react-native-fast-image.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-367148220/slmeet.react-native-safe-area-context.iml" filepath="$PROJECT_DIR$/.idea/modules/-367148220/slmeet.react-native-safe-area-context.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-430725028/slmeet.react-native-screens.iml" filepath="$PROJECT_DIR$/.idea/modules/-430725028/slmeet.react-native-screens.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1590374373/slmeet.react-native-vector-icons.iml" filepath="$PROJECT_DIR$/.idea/modules/-1590374373/slmeet.react-native-vector-icons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-95923240/slmeet.react-native-webrtc.iml" filepath="$PROJECT_DIR$/.idea/modules/-95923240/slmeet.react-native-webrtc.iml" />
+    </modules>
+  </component>
+</project>

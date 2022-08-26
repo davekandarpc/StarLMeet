@@ -1,0 +1,6 @@
+module Pods_slmeet {
+  umbrella header "Pods-slmeet-umbrella.h"
+
+  export *
+  module * { export * }
+}
