@@ -32,7 +32,7 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
 
   const getUserList = async () => {
     const userListRes = await userList(user.id);
-    console.log("Data: " + JSON.stringify(userListRes));
+    //console.log("Data: " + JSON.stringify(userListRes));
     let userListDat = [];
     for (let i = 0; i < userListRes.length; i++) {
       let data = {
@@ -50,20 +50,20 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
       };
       userListDat.push(data);
     }
-    console.log("push datya ", userListDat);
+    //console.log("push datya ", userListDat);
     setContactList(userListDat);
   };
   useEffect(() => {
     AsyncStorage.getItem("userId").then((id) => {
       setUserName(id);
     });
-    console.log("Login user ", user);
+    //console.log("Login user ", user);
     getUserList();
   }, []);
 
   useEffect(() => {
-    console.log("USer list ", contactList);
-    console.log("USer userName ", userName);
+    ////console.log("USer list ", contactList);
+    //console.log("USer userName ", userName);
   }, [contactList, userName]);
 
   useEffect(() => {
@@ -89,9 +89,9 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
   };
 
   const onClickItem = async (selectedItem) => {
-    console.log("Selected Data ", selectedItem);
+    //console.log("Selected Data ", selectedItem);
     const room = generateID();
-    console.log(room);
+    //console.log(room);
 
     try {
       // await AsyncStorage.setItem("sendTo", selectedItem.callingId);
@@ -100,7 +100,7 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
       setSelectedRoom(selectedItem);
       navigation.navigate("chatStack", { roomID: room });
     } catch (err) {
-      console.log("Error", err);
+      //console.log("Error", err);
     }
   };
   const renderItem = ({ item }) => {
@@ -114,7 +114,7 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
         />
       );
     } else {
-      console.log("else", item?.id !== userName.trim());
+      //console.log("else", item?.id !== userName.trim());
     }
   };
 

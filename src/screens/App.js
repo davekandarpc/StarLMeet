@@ -40,15 +40,17 @@ const onMessageReceived = (message) => {
   }
 };
 const App = () => {
-  useEffect(async () => {
+  useEffect(() => {
     // initializeApp();
+    fetchData();
+  }, []);
+  const fetchData = async () => {
     await notifee.createChannel({
       id: "default",
       name: "Default Channel",
     });
     await messaging().onMessage(onMessageReceived);
-  }, []);
-
+  };
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>

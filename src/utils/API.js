@@ -10,7 +10,7 @@ const isTokenExpire = async (responseJson) => {
     console.log("Error ");
     return;
   }
-  console.log("Response ", response);
+  // console.log("Response ", response);
   return response;
 };
 
@@ -21,7 +21,7 @@ export const loginUser = async (data) => {
       method: "POST",
     }
   )
-    .then(async (response) => isTokenExpire(response.json()))
+    .then(async (response) => response)
     .catch((error) => console.log("error", error));
 };
 

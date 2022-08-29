@@ -21,9 +21,10 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
   const [fcmToken, setFcmToken] = useState("");
 
   useEffect(() => {
-    if (loaderState) {
-      loader(false);
-    }
+    // if (loaderState) {
+    //   loader(false);
+    // }
+    console.log("loader  ", loaderState);
   }, [loaderState]);
   useEffect(() => {
     getToken();
@@ -48,19 +49,24 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
       };
       const authLogin = await loginUser(loginFormData);
       // console.log("Login ", authLogin);
+      const { status } = authLogin;
       if (authLogin !== undefined) {
-        setUser(authLogin);
-        loader(false);
-        try {
-          await AsyncStorage.setItem("userId", JSON.stringify(authLogin.id));
-          await AsyncStorage.setItem(
-            "userCallerId",
-            JSON.stringify(authLogin.callingId.trim())
-          );
-          console.log("Hello");
-          navigation.navigate("tabStck");
-        } catch (err) {
-          console.log("Error", err);
+        if (status === 200) {
+          const loginRes = await authLogin.json();
+          setUser(loginRes);
+
+          try {
+            await AsyncStorage.setItem("userId", JSON.stringify(loginRes.id));
+            await AsyncStorage.setItem(
+              "userCallerId",
+              JSON.stringify(loginRes.callingId.trim())
+            );
+            console.log("Hello");
+            loader(false);
+            navigation.navigate("tabStck");
+          } catch (err) {
+            console.log("Error", err);
+          }
         }
       }
     } else {
@@ -88,14 +94,13 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
           <Text style={styles.buttonText}>Login</Text>
         </View>
       </TouchableOpacity>
-      <Global />
-      {/* {loaderState && (
+      {loaderState && (
         <View style={styles.loaderContainer}>
           <View style={styles.container}>
             <ActivityIndicator size="large" color={colors.primaryColor} />
           </View>
         </View>
-      )} */}
+      )}
     </View>
   );
 };

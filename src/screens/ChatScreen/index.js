@@ -1,11 +1,11 @@
 import React, { useEffect, useCallback, useState, useRef } from "react";
 import {
   View,
-  FlatList,
   Text,
   Platform,
   KeyboardAvoidingView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { Header } from "../../components/HeaderComponent";
 import { styles } from "./styles";
@@ -40,11 +40,19 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import withUser from "../../redux/HOC/withUser";
 import { sendNotification, getMessageList, sendMessage } from "../../utils/API";
 import withSelectedRoom from "../../redux/HOC/withSelectedRoom";
+import withLoader from "../../redux/HOC/withLoader";
 
 const STUN_SERVER = "stun:webrtc.skyrockets.space:3478";
 const SOCKET_URL = "wss://webrtc.skyrockets.space:8080";
 let peer;
-const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
+const ChatScreen = ({
+  route,
+  navigation,
+  user,
+  selectedRoom,
+  loader,
+  loaderState,
+}) => {
   const peerRef = useRef();
   const socketRef = useRef();
   const otherUser = useRef();
@@ -95,23 +103,21 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
   }, []);
 
   useEffect(() => {
-    console.log("user  ", user);
+    // console.log("user  ", user);
 
     let roomID;
     if (user.userTypeId === 2) {
       roomID = `Ad${user.id}_${selectedRoom.id}`;
-      //setRoomID(`Ad${user.id}_${selectedRoom.id}`);
     } else {
       roomID = `${user.id}_${selectedRoom.id}`;
-
-      //setRoomID(`${user.id}_${selectedRoom.id}`);
     }
     getMessages(roomID);
   }, [user, selectedRoom]);
 
   const getMessages = async (roomID) => {
+    loader(true);
     const messageResponse = await getMessageList(roomID);
-    console.log("rooom Data ", messageResponse);
+    // console.log("rooom Data ", messageResponse);
     const { status, data } = messageResponse;
     if (status === 200) {
       let res = await messageResponse.json();
@@ -123,17 +129,19 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
       for (let i = 0; i < Objs.length; i++) {
         let msg = {
           text: Objs[i].message,
-          user: { _id: res.senderId },
+          user: { _id: Objs[i].userid },
           createdAt: new Date(`${Objs[i].date}`),
           _id: Math.random(1000).toString(),
         };
         // msgList.push(msg);
+        loader(false);
         setMessages((previousMessages) =>
           GiftedChat.append(previousMessages, msg)
         );
       }
-      console.log("messages ", msgList);
+      // console.log("messages ", msgList);
     } else if (status === 204) {
+      loader(false);
       let newRoom = `${selectedRoom.id}_${user.id}`;
       getMessages(newRoom);
     }
@@ -193,12 +201,52 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
   const onLogin = () => {};
 
   useEffect(() => {
-    /**
-     *
-     * Sockets Signalling
-     */
     conn.current.onopen = () => {
-      //console.log("Connected to the signaling server");
+      console.log("Connected to the signaling server");
+      setSocketActive(true);
+    };
+    //when we got a message from a signaling server
+    conn.current.onmessage = (msg) => {
+      //console.log("msg --------------------->", msg);
+
+      const data = JSON.parse(msg.data);
+      //console.log("Data --------------------->", data);
+      switch (data.type) {
+        case "login":
+          console.log("Login dat");
+          break;
+        //when somebody wants to call us
+        case "offer":
+          handleOffer(data.offer, data.name);
+          console.log("Offer : ", data.offer, data.name);
+          break;
+        case "answer":
+          handleAnswer(data.answer);
+          console.log("Answer");
+          break;
+        //when a remote peer sends an ice candidate to us
+        case "candidate":
+          handleCandidate(data.candidate);
+          console.log("Candidate");
+          break;
+        case "leave":
+          handleLeave();
+          console.log("Leave");
+          break;
+        default:
+          break;
+      }
+    };
+    conn.current.onerror = function (err) {
+      console.log("Got error", err);
+    };
+    initLocalVideo();
+    registerPeerEvents();
+  }, []);
+
+  const openCallSocketConnection = () => {
+    conn.current.onopen = () => {
+      console.log("Connected to the signaling server");
       setSocketActive(true);
     };
     //when we got a message from a signaling server
@@ -213,8 +261,8 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
           break;
         //when somebody wants to call us
         case "offer":
+          console.log("Offer : ", data.offer, data.name);
           handleOffer(data.offer, data.name);
-          //console.log("Offer : ", data.offer, data.name);
           break;
         case "answer":
           handleAnswer(data.answer);
@@ -238,7 +286,7 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
     };
     initLocalVideo();
     registerPeerEvents();
-  }, []);
+  };
 
   useEffect(() => {
     if (!callActive) {
@@ -302,11 +350,13 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
       message.name = connectedUser.current;
       // //console.log("Connected iser in end----------", message);
     }
-    //console.log("Message", message);
+    console.log("Message", message);
     conn.current.send(JSON.stringify(message));
   };
 
   const onCall = () => {
+    // await openCallSocketConnection();
+    socketRef.current.disconnect();
     setOnCallCLick(true);
     sendCall(selectedUser);
     setReceiverName(selectedUser);
@@ -320,7 +370,7 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
     setCalling(true);
     const otherUser = receiverId;
     connectedUser.current = otherUser;
-    //console.log("Caling to", otherUser);
+    console.log("Caling to", otherUser);
     yourConn.current.createOffer().then((offer) => {
       //console.log("Sending Ofer 001", offer);
       yourConn.current.setLocalDescription(offer).then(() => {
@@ -455,34 +505,36 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
   ///**End calling code */
 
   useEffect(() => {
-    socketRef.current = io.connect("http://192.168.1.48:9000");
-    // socketRef.current = io.connect("http://212.90.120.175:9000");
-    socketRef.current.emit("join room", roomID); // Provide Room ID here
+    if (roomID !== "") {
+      // socketRef.current = io.connect("http://192.168.1.48:9000");
+      socketRef.current = io.connect("http://212.90.120.175:9000");
+      socketRef.current.emit("join room", roomID); // Provide Room ID here
 
-    socketRef.current.on("other user", (userID) => {
-      //console.log("other", userID);
-      callUser(userID);
-      other_User.current = userID;
-    });
+      socketRef.current.on("other user", (userID) => {
+        //console.log("other", userID);
+        callUser(userID);
+        other_User.current = userID;
+      });
 
-    socketRef.current.on("user joined", (userID) => {
-      //console.log("user joined", userID);
-      other_User.current = userID;
-    });
-    socketRef.current.on("offer", handle_Offer);
+      socketRef.current.on("user joined", (userID) => {
+        //console.log("user joined", userID);
+        other_User.current = userID;
+      });
+      socketRef.current.on("offer", handle_Offer);
 
-    socketRef.current.on("answer", handle_Answer);
+      socketRef.current.on("answer", handle_Answer);
 
-    socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
-
+      socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
+    }
+    // console.log("Room id ", roomID);
     return () => {
       //console.log("comm will unmount");
       let removeData = {
         roomId: `${roomID}`,
-        currentUser: `${socketRef.current.id}`,
+        currentUser: `${socketRef?.current?.id}`,
       };
-      socketRef.current.emit("left", removeData);
-      socketRef.current.emit("user left", `${roomID}`);
+      socketRef?.current?.emit("left", removeData);
+      socketRef?.current?.emit("user left", `${roomID}`);
     };
   }, [roomID]);
 
@@ -507,18 +559,18 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
     sendChannel.current.onmessage = handleReceive_Message;
   };
 
-  const onSend = useCallback(async (messages = []) => {
+  const onSend = useCallback(async (messages = [], roomId) => {
     //console.log("onSend called ", JSON.stringify(sendChannel?.current));
     console.log("onSend called ", JSON.stringify(messages));
     let newMessage = {
       senderId: user.id,
       receiverId: selectedRoom.id,
-      roomId: roomID,
+      roomId: roomId,
       message: messages[0].text,
     };
-    console.log("newMessage", JSON.stringify(newMessage));
+    //console.log("newMessage", JSON.stringify(newMessage));
     let sendMessageRes = await sendMessage(newMessage);
-    console.log("sendMessageRes called ", JSON.stringify(sendMessageRes));
+    //console.log("sendMessageRes called ", JSON.stringify(sendMessageRes));
     let { status } = sendMessageRes;
     if (sendMessageRes !== undefined) {
       if (status === 200) {
@@ -624,7 +676,7 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
         text: e.data,
         createdAt: new Date(),
         user: {
-          _id: 2,
+          _id: selectedRoom.id,
         },
       },
     ];
@@ -665,9 +717,11 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
   };
 
   const renderBubble = (props) => {
+    const message_sender_id = props.currentMessage.user._id;
     return (
       <Bubble
         {...props}
+        position={message_sender_id == user.id ? "right" : "left"}
         wrapperStyle={{
           right: {
             borderBottomRightRadius: 0,
@@ -709,21 +763,27 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
         title={selectedUser}
         subTitle="Er"
         onPressBack={() => {
-          //console.log("hello back");
+          let removeData = {
+            roomId: `${roomID}`,
+            currentUser: `${socketRef?.current?.id}`,
+          };
+          socketRef?.current?.emit("left", removeData);
+          socketRef?.current?.emit("user left", `${roomID}`);
+
+          navigation.navigate("tabStck");
         }}
         onPressCall={onCall}
       />
       <View style={{ height: "89%", color: "black" }}>
         <GiftedChat
           messages={messages}
-          onSend={(messages) => onSend(messages)}
+          onSend={(messages) => onSend(messages, roomID)}
           renderInputToolbar={(props) => MessengerBarContainer(props)}
           user={{
-            _id: 1,
+            _id: user.id,
           }}
           renderSend={(props) => customtSendButton(props)}
           renderBubble={(props) => renderBubble(props)}
-          getIsPositionRight={(message, user) => message.user.type === "AGENT"}
           renderComposer={(props) => (
             <Composer
               textInputStyle={{ color: colors.primaryTextColor }}
@@ -798,8 +858,15 @@ const ChatScreen = ({ route, navigation, user, selectedRoom }) => {
           </View>
         </View>
       </Modal>
+      {loaderState && (
+        <View style={styles.loaderContainer}>
+          <View style={styles.container}>
+            <ActivityIndicator size="large" color={colors.primaryColor} />
+          </View>
+        </View>
+      )}
     </View>
   );
 };
 
-export default withUser(withSelectedRoom(ChatScreen));
+export default withUser(withSelectedRoom(withLoader(ChatScreen)));
