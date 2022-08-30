@@ -63,7 +63,7 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
             );
             console.log("Hello");
             loader(false);
-            navigation.navigate("tabStck");
+            navigation.navigate("callScreenLoginDemo");
           } catch (err) {
             console.log("Error", err);
           }

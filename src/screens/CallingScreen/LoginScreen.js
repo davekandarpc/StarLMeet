@@ -10,15 +10,31 @@ import {
 // import { TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-community/async-storage";
 // import { Button } from "react-native-paper";
-
+import { colors } from "../../common/colors";
 export default function LoginScreen({ props, navigation }) {
   const [userId, setUserId] = useState("");
 
-  const onLogin = async () => {
+  const onUserList = async () => {
     try {
-      await AsyncStorage.setItem("userId", userId);
+      console.log("Hello");
+      navigation.navigate("tabStck");
+    } catch (err) {
+      console.log("Error", err);
+    }
+  };
+
+  const onChat = async () => {
+    try {
       console.log("Hello");
       navigation.navigate("callScreenDemo");
+    } catch (err) {
+      console.log("Error", err);
+    }
+  };
+  const onCall = async () => {
+    try {
+      console.log("Hello");
+      navigation.navigate("chatStack");
     } catch (err) {
       console.log("Error", err);
     }
@@ -27,13 +43,12 @@ export default function LoginScreen({ props, navigation }) {
   return (
     <View style={styles.root}>
       <View style={styles.content}>
-        <Text style={styles.heading}>Enter your id</Text>
-        <TextInput
+        {/* <TextInput
           label="Your ID"
           onChangeText={(text) => setUserId(text)}
           mode="outlined"
           style={styles.input}
-        />
+        /> */}
 
         {/* <Button
           mode="contained"
@@ -45,9 +60,19 @@ export default function LoginScreen({ props, navigation }) {
           <Text>Login</Text>
         </Button> */}
         {/* <Text>Login</Text> */}
-        <TouchableOpacity onPress={onLogin}>
-          <View style={styles.btn}>
-            <Text style={styles.btnContent}>Demo Login</Text>
+        <TouchableOpacity onPress={onUserList}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>User List</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onChat}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>Chat</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onCall}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>Call</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -79,6 +104,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#000",
     borderWidth: 1,
+  },
+  button: {
+    marginBottom: 30,
+    alignItems: "center",
+    backgroundColor: colors.primaryColor,
+    marginTop: 45,
+    borderRadius: 10,
+  },
+  buttonText: {
+    padding: 20,
+    color: "white",
+    fontSize: 18,
   },
   btn: {
     height: 60,

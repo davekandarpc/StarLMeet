@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Reactnative_project\\NEWSLMEET\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
+            "outputFile": "E:\\Reactnative_project\\StarLMeet\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-night-v8\\values-night-v8.xml",
             "map": [
                 {
                     "source": "C:\\Users\\HP_LAPTOP\\.gradle\\caches\\transforms-3\\0ff1e4888fd7eba473ee58a30b602b04\\transformed\\material-1.1.0\\res\\values-night-v8\\values-night-v8.xml",

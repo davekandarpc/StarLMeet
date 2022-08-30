@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Reactnative_project\\NEWSLMEET\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-h720dp-v13\\values-h720dp-v13.xml",
+            "outputFile": "E:\\Reactnative_project\\StarLMeet\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-h720dp-v13\\values-h720dp-v13.xml",
             "map": [
                 {
                     "source": "C:\\Users\\HP_LAPTOP\\.gradle\\caches\\transforms-3\\3872bc365fe87f1c2655273e7fafc583\\transformed\\appcompat-1.3.0\\res\\values-h720dp-v13\\values-h720dp-v13.xml",

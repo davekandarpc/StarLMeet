@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Reactnative_project\\NEWSLMEET\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-es-rUS\\values-es-rUS.xml",
+            "outputFile": "E:\\Reactnative_project\\StarLMeet\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-es-rUS\\values-es-rUS.xml",
             "map": [
                 {
                     "source": "C:\\Users\\HP_LAPTOP\\.gradle\\caches\\transforms-3\\4f9a316ddaf8b57eac53e2f5b3aecd45\\transformed\\jetified-play-services-base-18.0.1\\res\\values-es-rUS\\values.xml",
