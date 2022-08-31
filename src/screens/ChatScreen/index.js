@@ -1,3 +1,375 @@
+// import React, { useEffect, useCallback, useState, useRef } from "react";
+// import {
+//   View,
+//   Text,
+//   Platform,
+//   KeyboardAvoidingView,
+//   TouchableOpacity,
+//   ActivityIndicator,
+// } from "react-native";
+// import { Header } from "../../components/HeaderComponent";
+// import { styles } from "./styles";
+// import withUser from "../../redux/HOC/withUser";
+// import { sendNotification, getMessageList, sendMessage } from "../../utils/API";
+// import withSelectedRoom from "../../redux/HOC/withSelectedRoom";
+// import withLoader from "../../redux/HOC/withLoader";
+// import InCallManager from "react-native-incall-manager";
+// import Modal from "react-native-modal";
+// import MaterialIcon from "react-native-vector-icons/MaterialIcons";
+// import Icon from "react-native-vector-icons/FontAwesome";
+// import { colors } from "../../common/colors";
+// import io from "socket.io-client";
+// import {
+//   RTCPeerConnection,
+//   RTCSessionDescription,
+//   RTCIceCandidate,
+//   RTCView,
+//   MediaStream,
+//   MediaStreamTrack,
+//   mediaDevices,
+//   registerGlobals,
+// } from "react-native-webrtc";
+
+// const SOCKET_URL = "wss://webrtc.skyrockets.space:8080";
+// const ChatScreen = ({
+//   route,
+//   navigation,
+//   user,
+//   selectedRoom,
+//   loader,
+//   loaderState,
+// }) => {
+//   const [callActive, setCallActive] = useState(false);
+//   const [incomingCall, setIncomingCall] = useState(false);
+//   const [onCallCLick, setOnCallCLick] = useState(false);
+//   const [otherId, setOtherId] = useState("");
+//   const [selectedUser, setSelectedUser] = useState("");
+//   const [callToUsername, setCallToUsername] = useState("");
+//   const [onername, setOnername] = useState("");
+//   const [ReceiverName, setReceiverName] = useState("");
+//   const connectedUser = useRef(null);
+//   /**call start */
+//   let peerConstraints = {
+//     iceServers: [
+//       {
+//         urls: "stun:stun.l.google.com:19302",
+//       },
+//     ],
+//   };
+//   const socketConn = useRef(new WebSocket(SOCKET_URL));
+//   const pc = useRef(peerConstraints);
+
+//   useEffect(() => {
+//     socketConn.current.onopen = () => {
+//       console.log("Connected to the signaling server");
+//       send({
+//         type: "login",
+//         name: user.userName,
+//       });
+//       // setSocketActive(true);
+//     };
+//     //when we got a message from a signaling server
+//     socketConn.current.onmessage = (msg) => {
+//       //console.log("msg --------------------->", msg);
+
+//       const data = JSON.parse(msg.data);
+//       console.log("Data --------------------->", data);
+//       switch (data.type) {
+//         case "login":
+//           console.log("Login dat");
+//           break;
+//         //when somebody wants to call us
+//         case "offer":
+//           // handleOffer(data.offer, data.name);
+//           handleCheckOffer();
+//           console.log("Offer : ", data.offer, data.name);
+//           break;
+//         case "answer":
+//           // handleAnswer(data.answer);
+//           console.log("Answer");
+//           break;
+//         //when a remote peer sends an ice candidate to us
+//         case "candidate":
+//           // handleCandidate(data.candidate);
+//           console.log("Candidate");
+//           break;
+//         case "leave":
+//           // handleLeave();
+//           console.log("Leave");
+//           break;
+//         default:
+//           break;
+//       }
+//     };
+//     socketConn.current.onerror = function (err) {
+//       console.log("Got error", err);
+//     };
+//     // initLocalVideo();
+//     // registerPeerEvents();
+//     socket();
+//   }, []);
+//   useEffect(() => {}, []);
+//   const socket = async () => {
+//     console.log("socket ");
+//     let mediaConstraints = {
+//       audio: true,
+//       video: {
+//         frameRate: 30,
+//         facingMode: "user",
+//       },
+//     };
+
+//     let localMediaStream;
+//     let isVoiceOnly = false;
+
+//     try {
+//       const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
+
+//       if (isVoiceOnly) {
+//         let videoTrack = await mediaStream.getVideoTracks()[0];
+//         videoTrack.enabled = false;
+//       }
+
+//       localMediaStream = mediaStream;
+//     } catch (err) {
+//       // Handle Error
+//     }
+
+//     /**init peerConstant */
+
+//     pc.current = new RTCPeerConnection(peerConstraints);
+
+//     //connectionstatechange
+//     pc.current.addEventListener("connectionstatechange", (event) => {
+//       console.log("connectionstatechange  ", event);
+//       switch (pc.current.connectionState) {
+//         case "closed":
+//           console.log("call disconnect");
+//           break;
+//       }
+//     });
+
+//     //icecandidate
+//     pc.current.addEventListener("icecandidate", (event) => {
+//       // When you find a null candidate then there are no more candidates.
+//       // Gathering of candidates has finished.
+//       if (!event.candidate) {
+//         return;
+//       }
+
+//       // Send the event.candidate onto the person you're calling.
+//       // Keeping to Trickle ICE Standards, you should send the candidates immediately.
+//     });
+
+//     //icecandidateerror
+//     pc.current.addEventListener("icecandidateerror", (event) => {
+//       // You can ignore some candidate errors.
+//       // Connections can still be made even when errors occur.
+//     });
+
+//     //   iceconnectionstatechange
+//     pc.current.addEventListener("iceconnectionstatechange", (event) => {
+//       // console.log("event iceconnectionstatechange ", event);
+//       console.log("he ", pc.current.iceConnectionState);
+//       switch (pc.current.iceConnectionState) {
+//         case "connected":
+//         case "completed":
+//           // You can handle the call being connected here.
+//           // Like setting the video streams to visible.
+
+//           break;
+//       }
+//     });
+
+//     pc.current.addEventListener("negotiationneeded", (event) => {
+//       // You can start the offer stages here.
+//       // Be careful as this event can be called multiple times.
+//     });
+
+//     pc.current.addEventListener("signalingstatechange", (event) => {
+//       switch (pc.current.signalingState) {
+//         case "closed":
+//           // You can handle the call being disconnected here.
+
+//           break;
+//       }
+//     });
+
+//     pc.current.addEventListener("addstream", (event) => {
+//       // Grab the remote stream from the connected participant.
+//       remoteMediaStream = event.stream;
+//     });
+
+//     // Add our stream to the peer connection.
+//     pc.current.addStream(localMediaStream);
+
+//     let sessionConstraints = {
+//       mandatory: {
+//         OfferToReceiveAudio: true,
+//         OfferToReceiveVideo: true,
+//         VoiceActivityDetection: true,
+//       },
+//     };
+
+//     try {
+//       const offerDescription = await pc.current.createOffer(sessionConstraints);
+//       await pc.current.setLocalDescription(offerDescription);
+//       // console.log("offerDescription ", offerDescription);
+//       // Send the offerDescription to the other participant.
+//       send({
+//         type: "offer",
+//         offer: offerDescription,
+//       });
+//     } catch (err) {
+//       console.error("err step 4 ", err);
+//     }
+
+//     // try {
+//     //   // Use the received answerDescription
+//     //   const answerDescription = new RTCSessionDescription(answerDescription);
+//     //   await pc.current.setRemoteDescription(answerDescription);
+//     // } catch (err) {
+//     //   console.error("err step 7 ", err);
+//     // }
+//   };
+//   const handleCheckOffer = async () => {
+//     console.log("Got check offer handleCheckOffer answer");
+//     try {
+//       // Use the received offerDescription
+//       const offerDescription = new RTCSessionDescription(offerDescription);
+//       await pc.current.setRemoteDescription(offerDescription);
+
+//       const answerDescription = await pc.current.createAnswer(
+//         sessionConstraints
+//       );
+//       await pc.current.setLocalDescription(answerDescription);
+//       send({
+//         type: "answer",
+//         answer: answerDescription,
+//       });
+//       // Here is a good place to process candidates.
+//       processCandidates();
+
+//       // Send the answerDescription back as a response to the offerDescription.
+//     } catch (err) {
+//       console.error("err step 6 ", err);
+//     }
+//   };
+//   const send = (message) => {
+//     if (connectedUser.current) {
+//       message.name = connectedUser.current;
+//       // //console.log("Connected iser in end----------", message);
+//     }
+//     // console.log("Message", message);
+//     socketConn.current.send(JSON.stringify(message));
+//   };
+
+//   let remoteCandidates = [];
+
+//   const handleRemoteCandidate = (iceCandidate) => {
+//     iceCandidate = new RTCIceCandidate(iceCandidate);
+
+//     if (pc.current.remoteDescription == null) {
+//       return remoteCandidates.push(iceCandidate);
+//     }
+
+//     return pc.current.addIceCandidate(iceCandidate);
+//   };
+
+//   const processCandidates = () => {
+//     if (remoteCandidates.length < 1) {
+//       return;
+//     }
+
+//     remoteCandidates.map((candidate) => pc.current.addIceCandidate(candidate));
+//     remoteCandidates = [];
+//   };
+//   /**call End */
+
+//   const acceptCall = async () => {};
+//   const handleLeave = async () => {};
+//   const onEndCall = async () => {};
+//   const onCall = async () => {
+//     // connectedUser.current = otherUser;
+//   };
+
+//   return (
+//     <View>
+//       <Header
+//         title={selectedUser}
+//         subTitle="Er"
+//         onPressBack={() => {
+//           console.log("back");
+//         }}
+//         onPressCall={onCall}
+//       />
+//       <Modal isVisible={incomingCall && !callActive}>
+//         <View
+//           style={{
+//             backgroundColor: "white",
+//             padding: 22,
+//             borderRadius: 4,
+//             borderColor: "rgba(0, 0, 0, 0.1)",
+//           }}
+//         >
+//           <View>
+//             <Text
+//               style={{ color: colors.primaryTextColor, fontWeight: "bold" }}
+//             >
+//               Incoming call ........
+//             </Text>
+//             <View
+//               style={{
+//                 flexDirection: "row",
+//                 justifyContent: "space-between",
+//                 marginTop: 15,
+//               }}
+//             >
+//               <TouchableOpacity
+//                 style={styles.btnContentAccept}
+//                 onPress={acceptCall}
+//               >
+//                 <Text style={styles.textColor}>Accept Call</Text>
+//               </TouchableOpacity>
+//               <TouchableOpacity
+//                 style={styles.btnContentReject}
+//                 onPress={handleLeave}
+//               >
+//                 <Text style={styles.textColor}>Reject Call </Text>
+//               </TouchableOpacity>
+//             </View>
+//           </View>
+//         </View>
+//       </Modal>
+//       <Modal isVisible={onCallCLick}>
+//         <View
+//           style={{
+//             backgroundColor: "white",
+//             flex: 1,
+//           }}
+//         >
+//           <View style={styles.avtarContainer}>
+//             <View style={styles.maincallbtndiv}>
+//               <View style={styles.callnamebtn}>
+//                 <Text style={styles.callnamebtnText}>
+//                   {selectedUser.substring(0)}
+//                 </Text>
+//               </View>
+//             </View>
+//           </View>
+//           <View style={styles.bottomCenter}>
+//             <TouchableOpacity onPress={onEndCall}>
+//               <View style={styles.callbuton}>
+//                 <MaterialIcon name="call" size={40} color="white" />
+//               </View>
+//             </TouchableOpacity>
+//           </View>
+//         </View>
+//       </Modal>
+//     </View>
+//   );
+// };
+
 import React, { useEffect, useCallback, useState, useRef } from "react";
 import {
   View,
@@ -42,7 +414,8 @@ import { sendNotification, getMessageList, sendMessage } from "../../utils/API";
 import withSelectedRoom from "../../redux/HOC/withSelectedRoom";
 import withLoader from "../../redux/HOC/withLoader";
 
-const STUN_SERVER = "stun:webrtc.skyrockets.space:3478";
+// const STUN_SERVER = "stun:webrtc.skyrockets.space:3478";
+const STUN_SERVER = "stun:stun.l.google.com:19302";
 const SOCKET_URL = "wss://webrtc.skyrockets.space:8080";
 let peer;
 const ChatScreen = ({
@@ -98,8 +471,10 @@ const ChatScreen = ({
       setOnername(id.trim());
     });
     AsyncStorage.getItem("sendTo").then((id) => {
-      setSelectedUserName(id.trimEnd());
+      setSelectedUserName(user.userName.trim() === "smith" ? "john" : "smith");
+      // setSelectedUserName(id.trim());
     });
+    console.log("user data ", user.userName.trim());
   }, []);
 
   useEffect(() => {
@@ -111,7 +486,7 @@ const ChatScreen = ({
     } else {
       roomID = `${user.id}_${selectedRoom.id}`;
     }
-    getMessages(roomID);
+    // getMessages(roomID);
   }, [user, selectedRoom]);
 
   const getMessages = async (roomID) => {
@@ -254,13 +629,16 @@ const ChatScreen = ({
       //console.log("msg --------------------->", msg);
 
       const data = JSON.parse(msg.data);
-      //console.log("Data --------------------->", data);
+      console.log("Data --------------------->", data);
       switch (data.type) {
         case "login":
           //console.log("Login dat");
           break;
         //when somebody wants to call us
         case "offer":
+          if (data.name === undefined) {
+            data.name = selectedUser;
+          }
           console.log("Offer : ", data.offer, data.name);
           handleOffer(data.offer, data.name);
           break;
@@ -298,7 +676,7 @@ const ChatScreen = ({
 
   const registerPeerEvents = () => {
     yourConn.current.onaddstream = (event) => {
-      //console.log("On Add Remote Stream");
+      console.log("On Add Remote Stream");
       setRemoteStream(event.stream);
     };
 
@@ -351,12 +729,13 @@ const ChatScreen = ({
       // //console.log("Connected iser in end----------", message);
     }
     console.log("Message", message);
+
     conn.current.send(JSON.stringify(message));
   };
 
   const onCall = () => {
     // await openCallSocketConnection();
-    socketRef.current.disconnect();
+    // socketRef.current.disconnect();
     setOnCallCLick(true);
     sendCall(selectedUser);
     setReceiverName(selectedUser);
@@ -372,9 +751,9 @@ const ChatScreen = ({
     connectedUser.current = otherUser;
     console.log("Caling to", otherUser);
     yourConn.current.createOffer().then((offer) => {
-      //console.log("Sending Ofer 001", offer);
+      // console.log("Sending Ofer 001", offer);
       yourConn.current.setLocalDescription(offer).then(() => {
-        // //console.log("Sending Ofer", offer);
+        // console.log("Sending Ofer", offer);
         send({
           type: "offer",
           offer: offer,
@@ -382,6 +761,7 @@ const ChatScreen = ({
       });
     });
   };
+
   const sendNotification = async (message) => {
     const sendInComingCallRequest = {
       deviceId: `${selectedRoom.fcmToken}`,
@@ -418,7 +798,7 @@ const ChatScreen = ({
     const offer = offerRef.current.offer;
     setIncomingCall(false);
     setCallActive(true);
-    //console.log("Accepting CALL", name, offer);
+    console.log("Accepting CALL", name, offer);
     yourConn.current
       .setRemoteDescription(offer)
       .then(function () {
@@ -504,255 +884,6 @@ const ChatScreen = ({
   };
   ///**End calling code */
 
-  useEffect(() => {
-    if (roomID !== "") {
-      // socketRef.current = io.connect("http://192.168.1.48:9000");
-      socketRef.current = io.connect("http://212.90.120.175:9000");
-      socketRef.current.emit("join room", roomID); // Provide Room ID here
-
-      socketRef.current.on("other user", (userID) => {
-        //console.log("other", userID);
-        callUser(userID);
-        other_User.current = userID;
-      });
-
-      socketRef.current.on("user joined", (userID) => {
-        //console.log("user joined", userID);
-        other_User.current = userID;
-      });
-      socketRef.current.on("offer", handle_Offer);
-
-      socketRef.current.on("answer", handle_Answer);
-
-      socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
-    }
-    // console.log("Room id ", roomID);
-    return () => {
-      //console.log("comm will unmount");
-      let removeData = {
-        roomId: `${roomID}`,
-        currentUser: `${socketRef?.current?.id}`,
-      };
-      socketRef?.current?.emit("left", removeData);
-      socketRef?.current?.emit("user left", `${roomID}`);
-    };
-  }, [roomID]);
-
-  useEffect(() => {
-    AsyncStorage.getItem("sendTo").then((id) => {
-      setSelectedUserName(id);
-    });
-    AsyncStorage.getItem("userId").then((id) => {
-      setUserName(id);
-    });
-
-    //console.log("higg ", messages);
-  }, [messages]);
-
-  const callUser = (userID) => {
-    // This will initiate the call
-    //console.log("[INFO] Initiated a call", userID);
-    peerRef.current = Peer(userID);
-    sendChannel.current = peerRef.current.createDataChannel("sendChannel");
-
-    // listen to incoming messages
-    sendChannel.current.onmessage = handleReceive_Message;
-  };
-
-  const onSend = useCallback(async (messages = [], roomId) => {
-    //console.log("onSend called ", JSON.stringify(sendChannel?.current));
-    console.log("onSend called ", JSON.stringify(messages));
-    let newMessage = {
-      senderId: user.id,
-      receiverId: selectedRoom.id,
-      roomId: roomId,
-      message: messages[0].text,
-    };
-    //console.log("newMessage", JSON.stringify(newMessage));
-    let sendMessageRes = await sendMessage(newMessage);
-    //console.log("sendMessageRes called ", JSON.stringify(sendMessageRes));
-    let { status } = sendMessageRes;
-    if (sendMessageRes !== undefined) {
-      if (status === 200) {
-        // console.log("sendMessageRes called ", JSON.stringify(sendMessageRes));
-        sendChannel?.current?.send(messages[0].text);
-        // await sendNotification(messages[0].text);
-        setMessages((previousMessages) =>
-          GiftedChat.append(previousMessages, messages)
-        );
-      }
-    }
-  }, []);
-
-  const Peer = (userID) => {
-    peer = new RTCPeerConnection({
-      iceServers: [
-        {
-          urls: "stun:stun.stunprotocol.org",
-        },
-        {
-          urls: "turn:numb.viagenie.ca",
-          credential: "muazkh",
-          username: "webrtc@live.com",
-        },
-      ],
-    });
-    peer.onicecandidate = handleICECandidateEvent;
-    peer.onnegotiationneeded = () => handleNegotiationNeededEvent(userID);
-    return peer;
-  };
-
-  const handleNegotiationNeededEvent = (userID) => {
-    // Make Offer
-    //console.log("make offer ", userID);
-    peerRef.current
-      .createOffer()
-      .then((offer) => {
-        //console.log("make offer 02", offer);
-        return peerRef.current.setLocalDescription(offer);
-      })
-      .then(() => {
-        const payload = {
-          target: userID,
-          caller: socketRef.current.id,
-          sdp: peerRef.current.localDescription,
-        };
-        //console.log("make offer 03", payload);
-        socketRef.current.emit("offer", payload);
-      })
-      .catch((err) =>
-        console.log("Error handling negotiation needed event", err)
-      );
-  };
-
-  const handleICECandidateEvent = (e) => {
-    //console.log("evenet ", e.candidate);
-    if (e.candidate) {
-      const payload = {
-        target: other_User.current,
-        candidate: e.candidate,
-      };
-      //console.log("payload ", payload);
-      socketRef.current.emit("ice-candidate", payload);
-    }
-  };
-
-  const handle_Offer = (incoming) => {
-    // Handle Offer made by the initiating peer
-    //console.log("[INFO] Handling Offer");
-    peerRef.current = Peer();
-    peerRef.current.ondatachannel = (event) => {
-      sendChannel.current = event.channel;
-      sendChannel.current.onmessage = handleReceive_Message;
-      //console.log("[SUCCESS] Connection established");
-    };
-
-    const desc = new RTCSessionDescription(incoming.sdp);
-    peerRef.current
-      .setRemoteDescription(desc)
-      .then(() => {})
-      .then(() => {
-        return peerRef.current.createAnswer();
-      })
-      .then((answer) => {
-        return peerRef.current.setLocalDescription(answer);
-      })
-      .then(() => {
-        const payload = {
-          target: incoming.caller,
-          caller: socketRef.current.id,
-          sdp: peerRef.current.localDescription,
-        };
-        socketRef.current.emit("answer", payload);
-      });
-  };
-
-  const handleReceive_Message = (e) => {
-    //console.log("[INFO] Message received from peer", e.data);
-    //console.log("[INFO] Message received from peer 002", e.data);
-    const msg = [
-      {
-        _id: Math.random(1000).toString(),
-        text: e.data,
-        createdAt: new Date(),
-        user: {
-          _id: selectedRoom.id,
-        },
-      },
-    ];
-    //console.log("message recive ", msg);
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, msg));
-    // setMessages((messages) => [...messages, { yours: false, value: e.data }]);
-  };
-
-  const handle_Answer = (message) => {
-    // Handle answer by the remote peer
-    const desc = new RTCSessionDescription(message.sdp);
-    //console.log("desc Answerr ", JSON.stringify(desc));
-    peerRef.current
-      .setRemoteDescription(desc)
-      .catch((e) => console.log("Error handle answer", e));
-  };
-
-  const handleNewICECandidateMsg = (incoming) => {
-    const candidate = new RTCIceCandidate(incoming);
-    //console.log("New candidate ", candidate);
-    peerRef.current.addIceCandidate(candidate).catch((e) => console.log(e));
-  };
-
-  const MessengerBarContainer = (props) => {
-    return (
-      <InputToolbar {...props} containerStyle={styles.inputToolbarContainer} />
-    );
-  };
-
-  const customtSendButton = (props) => {
-    return (
-      <Send
-        {...props}
-        textStyle={{ color: colors.primaryColor }}
-        label={"Send"}
-      />
-    );
-  };
-
-  const renderBubble = (props) => {
-    const message_sender_id = props.currentMessage.user._id;
-    return (
-      <Bubble
-        {...props}
-        position={message_sender_id == user.id ? "right" : "left"}
-        wrapperStyle={{
-          right: {
-            borderBottomRightRadius: 0,
-            borderBottomLeftRadius: 15,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 15,
-            backgroundColor: colors.primaryColor,
-          },
-          left: {
-            borderBottomRightRadius: 15,
-            borderBottomLeftRadius: 15,
-            borderTopRightRadius: 15,
-            borderTopLeftRadius: 0,
-            backgroundColor: colors.white,
-          },
-        }}
-      />
-    );
-  };
-
-  const onCLickCall = async () => {
-    //console.log("CLick on Call");
-    try {
-      await AsyncStorage.setItem("userId", userName);
-      //console.log("Hello");
-      navigation.navigate("callScreenDemo");
-    } catch (err) {
-      //console.log("Error", err);
-    }
-  };
-
   const onEndCall = () => {
     handleLeave();
   };
@@ -774,7 +905,7 @@ const ChatScreen = ({
         }}
         onPressCall={onCall}
       />
-      <View style={{ height: "89%", color: "black" }}>
+      {/* <View style={{ height: "89%", color: "black" }}>
         <GiftedChat
           messages={messages}
           onSend={(messages) => onSend(messages, roomID)}
@@ -794,7 +925,7 @@ const ChatScreen = ({
         {Platform.OS === "android" && (
           <KeyboardAvoidingView behavior="padding" />
         )}
-      </View>
+      </View> */}
       <Modal isVisible={incomingCall && !callActive}>
         <View
           style={{
