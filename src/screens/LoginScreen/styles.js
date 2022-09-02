@@ -8,34 +8,48 @@ export const styles = StyleSheet.create({
     padding: 25,
     justifyContent: "center",
   },
+
   textInputContainer: {
     height: 50,
     borderColor: "grey",
     borderWidth: 1,
-    margin: 10,
+    marginHorizontal: 10,
+    marginBottom: 5,
     fontSize: 14,
     borderRadius: 6,
     color: colors.primaryTextColor,
     paddingHorizontal: 10,
   },
+
+  errorText: {
+    marginHorizontal: 10,
+    marginBottom: 10,
+    color: "red",
+  },
+
   button: {
-    marginBottom: 30,
     alignItems: "center",
     backgroundColor: colors.primaryColor,
-    marginTop: 45,
+    height: 50,
+    marginBottom: 30,
+    marginTop: 15,
+    marginHorizontal: 10,
     borderRadius: 10,
+    padding: 10,
   },
+
   buttonText: {
-    padding: 20,
     color: "white",
     fontSize: 18,
   },
+
   container: {
     justifyContent: "center",
     height: 50,
     width: 50,
     flex: 1,
   },
+
   loaderContainer: {
     position: "absolute",
     justifyContent: "center",

@@ -7,6 +7,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SplashScreen from "../screens/SplashScreen";
 import ChatScreen from "../screens/ChatScreen";
+import MusicScreen from "../screens/MusicScreen";
 import DemoLoginScreen from "../screens/CallingScreen/LoginScreen";
 import VideoLoginScreen from "../screens/VideoCallScreen/LoginScreen";
 import VideoCallScreen from "../screens/VideoCallScreen/CallScreen";
@@ -151,6 +152,11 @@ const Navigaion = () => {
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Music"
+          component={MusicScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

@@ -29,6 +29,7 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
   const [search, setSearch] = useState("");
   const [userName, setUserName] = useState("");
   const [contactList, setContactList] = useState([]);
+  const [searchList, setSearchList] = useState([]);
 
   const getUserList = async () => {
     const userListRes = await userList(user.id);
@@ -52,6 +53,7 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
     }
     //console.log("push datya ", userListDat);
     setContactList(userListDat);
+    setSearchList(userListDat);
   };
   useEffect(() => {
     AsyncStorage.getItem("userId").then((id) => {
@@ -66,18 +68,20 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
     console.log("USer userName ", user.id);
   }, [contactList, userName]);
 
-  useEffect(() => {
-    if (search != "") {
-      const daata = contactList.filter((listItem) =>
-        listItem.user_name.toLowerCase().includes(search.toLowerCase())
-      );
-      setContactList(daata);
-    } else {
-      setContactList(contactData);
-    }
-  }, [search]);
+  const searchTerm = () => {
+    const result = searchList.filter((value) => {
+      if (value.userName.includes(search.toLowerCase())) {
+        return value;
+      } else if (search === "") {
+        return value;
+      }
+    });
+    setContactList(result);
+  };
 
-  
+  useEffect(() => {
+    searchTerm();
+  }, [search]);
 
   const onClickItem = async (selectedItem) => {
     try {

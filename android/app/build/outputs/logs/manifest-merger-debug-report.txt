@@ -31,6 +31,7 @@ MERGED from [com.facebook.react:react-native:0.68.2] C:\Users\HP_LAPTOP\.gradle\
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\1b85878ea0d653a7ff638ee47e2aef37\transformed\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.firebase:firebase-analytics:21.1.0] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\cda389a0323d013698eb88751ca471ae\transformed\jetified-firebase-analytics-21.1.0\AndroidManifest.xml:2:1-9:12
 MERGED from [org.webkit:android-jsc:r250230] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\dde8e329c7c870585dd7fa9a11087c5f\transformed\jetified-android-jsc-r250230\AndroidManifest.xml:2:1-11:12
+MERGED from [:react-native-sound] E:\Reactnative_project\StarLMeet\node_modules\react-native-sound\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-10:12
 MERGED from [com.google.firebase:firebase-messaging:23.0.7] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\a20813f49072324496f1d0dc8c033a5d\transformed\jetified-firebase-messaging-23.0.7\AndroidManifest.xml:17:1-62:12
 MERGED from [com.google.firebase:firebase-datatransport:18.1.5] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\50e6d9d865e6ddd3ecd2b24c17a638e1\transformed\jetified-firebase-datatransport-18.1.5\AndroidManifest.xml:15:1-34:12
 MERGED from [com.google.android.datatransport:transport-backend-cct:3.1.6] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\a113310820dcb954519261622f1c6661\transformed\jetified-transport-backend-cct-3.1.6\AndroidManifest.xml:15:1-38:12
@@ -658,6 +659,8 @@ MERGED from [com.google.firebase:firebase-analytics:21.1.0] C:\Users\HP_LAPTOP\.
 MERGED from [com.google.firebase:firebase-analytics:21.1.0] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\cda389a0323d013698eb88751ca471ae\transformed\jetified-firebase-analytics-21.1.0\AndroidManifest.xml:5:5-44
 MERGED from [org.webkit:android-jsc:r250230] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\dde8e329c7c870585dd7fa9a11087c5f\transformed\jetified-android-jsc-r250230\AndroidManifest.xml:7:5-9:41
 MERGED from [org.webkit:android-jsc:r250230] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\dde8e329c7c870585dd7fa9a11087c5f\transformed\jetified-android-jsc-r250230\AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-sound] E:\Reactnative_project\StarLMeet\node_modules\react-native-sound\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:6:5-8:41
+MERGED from [:react-native-sound] E:\Reactnative_project\StarLMeet\node_modules\react-native-sound\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:6:5-8:41
 MERGED from [com.google.firebase:firebase-messaging:23.0.7] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\a20813f49072324496f1d0dc8c033a5d\transformed\jetified-firebase-messaging-23.0.7\AndroidManifest.xml:21:5-23:41
 MERGED from [com.google.firebase:firebase-messaging:23.0.7] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\a20813f49072324496f1d0dc8c033a5d\transformed\jetified-firebase-messaging-23.0.7\AndroidManifest.xml:21:5-23:41
 MERGED from [com.google.firebase:firebase-datatransport:18.1.5] C:\Users\HP_LAPTOP\.gradle\caches\transforms-3\50e6d9d865e6ddd3ecd2b24c17a638e1\transformed\jetified-firebase-datatransport-18.1.5\AndroidManifest.xml:19:5-21:41

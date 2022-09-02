@@ -14,7 +14,7 @@ const SplashScreen = ({ navigation, loader, loaderState }) => {
     let timeout;
     timeout = setTimeout(() => {
       // navigation.navigate("callScreenLoginDemo");
-      navigation.navigate("Login");
+      navigation.navigate("Music");
     }, 3000);
     return () => {
       clearTimeout(timeout);

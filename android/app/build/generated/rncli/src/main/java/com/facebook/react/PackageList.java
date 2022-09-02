@@ -45,6 +45,8 @@ import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 // react-native-sensitive-info
 import br.com.classapp.RNSensitiveInfo.RNSensitiveInfoPackage;
+// react-native-sound
+import com.zmxv.RNSound.RNSoundPackage;
 // react-native-vector-icons
 import com.oblador.vectoricons.VectorIconsPackage;
 // react-native-voximplant
@@ -111,6 +113,7 @@ public class PackageList {
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new RNSensitiveInfoPackage(),
+      new RNSoundPackage(),
       new VectorIconsPackage(),
       new VoxImplantReactPackage()
     ));

@@ -21,6 +21,8 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
   const [password, setPassword] = useState("");
   const [fcmToken, setFcmToken] = useState("");
   const [voxStatus, setStatus] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const voximplant = Voximplant.getInstance();
 
@@ -57,46 +59,40 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
   };
 
   const login = async () => {
-    loader(true);
-
-    if (userName != "" && password != "") {
-      const loginFormData = {
-        userName,
-        password,
-        token: fcmToken,
-      };
-      const authLogin = await loginUser(loginFormData);
-      console.log("Login ", authLogin);
-      const { status } = authLogin;
-      if (authLogin !== undefined) {
-        if (status === 200) {
-          const loginRes = await authLogin.json();
-          setUser(loginRes);
-          let voxUser = await getVoxUser(userName);
-          let withjson = await voxUser.json();
-          const { result } = withjson;
-          if (result.length > 0) {
-            console.log("do login", result);
-            console.log("do userName ", userName, password);
-            try {
-              const fqUsername = `${userName}@${APP_NAME}.${ACC_NAME}.voximplant.com`;
-              let authres = await voximplant.login(fqUsername, password);
-              console.log(" authres ", authres);
-              loader(false);
-              navigation.navigate("tabStck");
-            } catch (err) {
-              console.log("Error", err);
-            }
-          } else {
-            console.log("do add user in vox");
-            const loginForVoxData = {
-              userId: userName,
-              pass: password,
-              displayName: userName,
-            };
-            const create_vox = await creatVox_User(loginForVoxData);
-            console.log(create_vox);
-            if (create_vox === 200) {
+    let flag = true;
+    if (userName === "") {
+      flag = false;
+      setUsernameError("Please enter your username");
+    } else {
+      setUsernameError("");
+    }
+    if (password === "") {
+      flag = false;
+      setPasswordError("Please enter your password");
+    } else {
+      setPasswordError("");
+    }
+    if (flag === true) {
+      loader(true);
+      if (userName != "" && password != "") {
+        const loginFormData = {
+          userName,
+          password,
+          token: fcmToken,
+        };
+        const authLogin = await loginUser(loginFormData);
+        console.log("Login ", authLogin);
+        const { status } = authLogin;
+        if (authLogin !== undefined) {
+          if (status === 200) {
+            const loginRes = await authLogin.json();
+            setUser(loginRes);
+            let voxUser = await getVoxUser(userName);
+            let withjson = await voxUser.json();
+            const { result } = withjson;
+            if (result.length > 0) {
+              console.log("do login", result);
+              console.log("do userName ", userName, password);
               try {
                 const fqUsername = `${userName}@${APP_NAME}.${ACC_NAME}.voximplant.com`;
                 let authres = await voximplant.login(fqUsername, password);
@@ -106,12 +102,37 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
               } catch (err) {
                 console.log("Error", err);
               }
+            } else {
+              console.log("do add user in vox");
+              const loginForVoxData = {
+                userId: userName,
+                pass: password,
+                displayName: userName,
+              };
+              const create_vox = await creatVox_User(loginForVoxData);
+              console.log(create_vox);
+              if (create_vox === 200) {
+                try {
+                  const fqUsername = `${userName}@${APP_NAME}.${ACC_NAME}.voximplant.com`;
+                  let authres = await voximplant.login(fqUsername, password);
+                  console.log(" authres ", authres);
+                  loader(false);
+                  navigation.navigate("tabStck");
+                } catch (err) {
+                  console.log("Error", err);
+                }
+              }
             }
+          } else if (status === 500) {
+            loader(false);
+            const dataError = await authLogin.text();
+            console.log("dataError: ", typeof dataError);
+            alert("User not found. Please enter correct credentials.");
           }
         }
+      } else {
+        alert("Please fill user name");
       }
-    } else {
-      alert("Please fill user name");
     }
   };
 
@@ -123,6 +144,7 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
         placeholder="UserName"
         value={userName}
       />
+      <Text style={styles.errorText}>{usernameError}</Text>
       <TextInput
         style={styles.textInputContainer}
         onChangeText={(text) => setPassword(text)}
@@ -130,6 +152,7 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
         value={password}
         secureTextEntry={true}
       />
+      <Text style={styles.errorText}>{passwordError}</Text>
       <TouchableOpacity onPress={login}>
         <View style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
