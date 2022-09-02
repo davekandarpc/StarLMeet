@@ -64,3 +64,26 @@ export const sendMessage = async (requestParams) => {
     .then((response) => response)
     .catch((error) => console.log("error", error));
 };
+export const createVoxUser = async (requestParams) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  return fetch(
+    `${API_BASE_URL}/VoxCreateUser?userId=${requestParams.userId}&password=${requestParams.pass}&userdisplayname=${requestParams.displayName}`,
+    {
+      method: "POST",
+      headers: myHeaders,
+    }
+  )
+    .then((response) => response)
+    .catch((error) => console.log("error", error));
+};
+export const getVoxUser = async (userName) => {
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  return fetch(`${API_BASE_URL}/VoxGetUser?user_name=${userName}`, {
+    method: "POST",
+    headers: myHeaders,
+  })
+    .then((response) => response)
+    .catch((error) => console.log("error", error));
+};

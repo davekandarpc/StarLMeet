@@ -1,51 +1,50 @@
-import {StyleSheet, Dimensions} from 'react-native';
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
-import {colors} from '../../common/colors';
+import { StyleSheet, Dimensions } from "react-native";
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
+import { colors } from "../../common/colors";
 export const styles = StyleSheet.create({
   mainContainer: {
     height: 90,
-    flexDirection: 'row',
+    flexDirection: "row",
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     shadowOpacity: 0.2,
     elevation: 3,
-    borderBottomWidth:1,
-    borderBottomColor:colors.gray
+    backgroundColor: colors.white,
   },
   iconContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-  subTextContainer:{
+  subTextContainer: {
     marginTop: 4,
     borderWidth: 0,
-    width: '85%',
-    flexDirection:'row',
+    width: "85%",
+    flexDirection: "row",
   },
-  subTextStyle:{
+  subTextStyle: {
     color: colors.gray,
     fontSize: 12,
-    marginLeft:5
+    marginLeft: 5,
   },
-  active:{
+  active: {
     height: 15,
     backgroundColor: colors.active,
     borderWidth: 0,
     width: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 50,
   },
-  inActive:{
+  inActive: {
     height: 15,
     backgroundColor: colors.gray,
     borderWidth: 0,
     width: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 50,
-  }
+  },
 });

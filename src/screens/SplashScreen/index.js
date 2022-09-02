@@ -13,6 +13,7 @@ const SplashScreen = ({ navigation, loader, loaderState }) => {
   useEffect(() => {
     let timeout;
     timeout = setTimeout(() => {
+      // navigation.navigate("callScreenLoginDemo");
       navigation.navigate("Login");
     }, 3000);
     return () => {

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Reactnative_project\\NEWSLMEET\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-kk\\values-kk.xml",
+            "outputFile": "E:\\Reactnative_project\\StarLMeet\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-kk\\values-kk.xml",
             "map": [
                 {
                     "source": "C:\\Users\\HP_LAPTOP\\.gradle\\caches\\transforms-3\\bd0132704e0e7d36cbd43628c3622b83\\transformed\\core-1.6.0\\res\\values-kk\\values-kk.xml",

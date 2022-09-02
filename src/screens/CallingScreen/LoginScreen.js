@@ -10,44 +10,36 @@ import {
 // import { TextInput } from "react-native-paper";
 import AsyncStorage from "@react-native-community/async-storage";
 // import { Button } from "react-native-paper";
-
+import { colors } from "../../common/colors";
 export default function LoginScreen({ props, navigation }) {
   const [userId, setUserId] = useState("");
 
   const onLogin = async () => {
     try {
-      await AsyncStorage.setItem("userId", userId);
+      // await AsyncStorage.setItem("userId", userId);
       console.log("Hello");
-      navigation.navigate("callScreenDemo");
+      navigation.navigate("tabStck");
     } catch (err) {
       console.log("Error", err);
     }
   };
 
+  const onCall = async () => {
+    console.log("Hello");
+    navigation.navigate("VideoChatStack");
+  };
+
   return (
     <View style={styles.root}>
       <View style={styles.content}>
-        <Text style={styles.heading}>Enter your id</Text>
-        <TextInput
-          label="Your ID"
-          onChangeText={(text) => setUserId(text)}
-          mode="outlined"
-          style={styles.input}
-        />
-
-        {/* <Button
-          mode="contained"
-          onPress={onLogin}
-          style={styles.btn}
-          contentStyle={styles.btnContent}
-          disabled={userId.length === 0}
-        >
-          <Text>Login</Text>
-        </Button> */}
-        {/* <Text>Login</Text> */}
-        <TouchableOpacity onPress={onLogin}>
-          <View style={styles.btn}>
-            <Text style={styles.btnContent}>Demo Login</Text>
+        {/*  <TouchableOpacity onPress={onLogin}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>user List </Text>
+          </View>
+        </TouchableOpacity> */}
+        <TouchableOpacity onPress={onCall}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>Call</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -94,5 +86,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     height: 60,
     color: "red",
+  },
+  button: {
+    marginBottom: 30,
+    alignItems: "center",
+    backgroundColor: colors.primaryColor,
+    marginTop: 45,
+    borderRadius: 10,
+  },
+  buttonText: {
+    padding: 20,
+    color: "white",
+    fontSize: 18,
   },
 });

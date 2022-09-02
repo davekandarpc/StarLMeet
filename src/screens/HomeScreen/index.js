@@ -55,7 +55,7 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
   };
   useEffect(() => {
     AsyncStorage.getItem("userId").then((id) => {
-      setUserName(id);
+      setUserName(user.id);
     });
     //console.log("Login user ", user);
     getUserList();
@@ -63,7 +63,7 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
 
   useEffect(() => {
     ////console.log("USer list ", contactList);
-    //console.log("USer userName ", userName);
+    console.log("USer userName ", user.id);
   }, [contactList, userName]);
 
   useEffect(() => {
@@ -77,28 +77,12 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
     }
   }, [search]);
 
-  const generateID = () => {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < 5; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
+  
 
   const onClickItem = async (selectedItem) => {
-    //console.log("Selected Data ", selectedItem);
-    const room = generateID();
-    //console.log(room);
-
     try {
-      // await AsyncStorage.setItem("sendTo", selectedItem.callingId);
-      await AsyncStorage.setItem("sendTo", selectedItem.userName);
-      await AsyncStorage.setItem("room", room);
       setSelectedRoom(selectedItem);
-      navigation.navigate("chatStack", { roomID: room });
+      navigation.navigate("chatStack");
     } catch (err) {
       //console.log("Error", err);
     }

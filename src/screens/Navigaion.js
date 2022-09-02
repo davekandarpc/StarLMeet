@@ -8,7 +8,12 @@ import LoginScreen from "../screens/LoginScreen";
 import SplashScreen from "../screens/SplashScreen";
 import ChatScreen from "../screens/ChatScreen";
 import DemoLoginScreen from "../screens/CallingScreen/LoginScreen";
-import DemoCallScreen from "../screens/CallingScreen/CallScreen";
+import VideoLoginScreen from "../screens/VideoCallScreen/LoginScreen";
+import VideoCallScreen from "../screens/VideoCallScreen/CallScreen";
+import VideoCallingScreen from "../screens/VideoCallScreen/CallingScreen";
+import VideoContactsScreen from "../screens/VideoCallScreen/ContactsScreen";
+import VideoIncomingCallScreen from "../screens/VideoCallScreen/IncomingCallScreen";
+
 import { colors } from "../common/colors";
 import MaterialIcon from "react-native-vector-icons/AntDesign";
 
@@ -58,6 +63,42 @@ function ChatStack() {
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+function VideoChatStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName="VideoLoginScreen"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen
+        name="VideoLoginScreen"
+        component={VideoLoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="VideoCallScreen"
+        component={VideoCallScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="VideoCallingScreen"
+        component={VideoCallingScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="VideoContactsScreen"
+        component={VideoContactsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="VideoIncomingCallScreen"
+        component={VideoIncomingCallScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
@@ -128,14 +169,29 @@ const Navigaion = () => {
           component={ChatStack}
         />
         <Stack.Screen
-          name="callScreenLoginDemo"
+          name="VideoChatStack"
           options={{ headerShown: false }}
-          component={DemoLoginScreen}
+          component={VideoChatStack}
         />
         <Stack.Screen
-          name="callScreenDemo"
+          name="VideoCallScreen"
+          component={VideoCallScreen}
           options={{ headerShown: false }}
-          component={DemoCallScreen}
+        />
+        <Stack.Screen
+          name="VideoCallingScreen"
+          component={VideoCallingScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="VideoContactsScreen"
+          component={VideoContactsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="VideoIncomingCallScreen"
+          component={VideoIncomingCallScreen}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

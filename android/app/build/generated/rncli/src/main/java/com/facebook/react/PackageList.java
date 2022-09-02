@@ -47,8 +47,8 @@ import com.swmansion.rnscreens.RNScreensPackage;
 import br.com.classapp.RNSensitiveInfo.RNSensitiveInfoPackage;
 // react-native-vector-icons
 import com.oblador.vectoricons.VectorIconsPackage;
-// react-native-webrtc
-import com.oney.WebRTCModule.WebRTCModulePackage;
+// react-native-voximplant
+import com.voximplant.reactnative.VoxImplantReactPackage;
 
 public class PackageList {
   private Application application;
@@ -112,7 +112,7 @@ public class PackageList {
       new RNScreensPackage(),
       new RNSensitiveInfoPackage(),
       new VectorIconsPackage(),
-      new WebRTCModulePackage()
+      new VoxImplantReactPackage()
     ));
   }
 }
