@@ -1,6 +1,0 @@
-module Pods_slmeet_slmeetTests {
-  umbrella header "Pods-slmeet-slmeetTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -131,12 +131,12 @@ export default function MusicScreen({ navigation, route }) {
           }
           refTemp.current.play(() => {
             console.log("third");
-            refTemp.current.release();
+            refTemp?.current?.release();
           });
         });
       }
       if (i !== index) {
-        refTemp.current.pause();
+        refTemp?.current?.pause();
       }
     }
   };
@@ -147,7 +147,7 @@ export default function MusicScreen({ navigation, route }) {
       if (i === index) {
         console.log("music paused");
         setMusicOngoing(false);
-        refTemp.current.pause();
+        refTemp?.current?.pause();
       }
     }
   };

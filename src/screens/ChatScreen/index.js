@@ -72,7 +72,7 @@ const ChatScreen = ({
   useEffect(() => {
     // socketRef.current = io('http://192.168.1.48:9000')
     console.log("Message datae ", messages);
-    socketRef.current = io.connect("http://192.168.1.48:9000");
+    socketRef.current = io.connect("http://212.90.120.175:9000");
     socketRef.current.on("message", ({ message, sid, r_id, time, rid }) => {
       console.log("messages ", { message, sid, r_id, time, rid });
       let msg = {
