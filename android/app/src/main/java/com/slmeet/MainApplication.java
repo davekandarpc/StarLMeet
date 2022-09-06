@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
+import com.cinder92.musicfiles.RNReactNativeGetMusicFilesPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.swmansion.gesturehandler.RNGestureHandlerPackage;
