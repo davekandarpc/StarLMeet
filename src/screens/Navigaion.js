@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -17,7 +18,8 @@ import VideoIncomingCallScreen from "../screens/VideoCallScreen/IncomingCallScre
 
 import { colors } from "../common/colors";
 import MaterialIcon from "react-native-vector-icons/AntDesign";
-
+import { navigationRef } from "./../utils/RootNavigation";
+import notifee from "@notifee/react-native";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 function HomeStack() {
@@ -145,9 +147,12 @@ function TabStack() {
     </Tab.Navigator>
   );
 }
+const handleAndroidOffAppInteraction = (response) => {
+  console.log("in Navigation ", response);
+};
 const Navigaion = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen
           name="SplashScreen"

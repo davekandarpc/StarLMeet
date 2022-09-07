@@ -1,10 +1,5 @@
 import React, { useEffect, useCallback, useState, useRef } from "react";
-import {
-  View,
-  KeyboardAvoidingView,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+import { View, KeyboardAvoidingView, ActivityIndicator } from "react-native";
 import { Header } from "../../components/HeaderComponent";
 import { styles } from "./styles";
 import {
@@ -15,10 +10,13 @@ import {
   Composer,
 } from "react-native-gifted-chat";
 import { colors } from "../../common/colors";
-import messaging from "@react-native-firebase/messaging";
 import { Voximplant } from "react-native-voximplant";
 import withUser from "../../redux/HOC/withUser";
-import { sendNotification, getMessageList, sendMessage } from "../../utils/API";
+import {
+  sendNotificationAPi,
+  getMessageList,
+  sendMessage,
+} from "../../utils/API";
 import withSelectedRoom from "../../redux/HOC/withSelectedRoom";
 import withLoader from "../../redux/HOC/withLoader";
 import io from "socket.io-client";
@@ -63,6 +61,7 @@ const ChatScreen = ({
       roomID = `${user.id}_${selectedRoom.id}`;
     }
     getMessages(roomID);
+    console.log("slected room ", JSON.stringify(selectedRoom));
   }, [user, selectedRoom]);
 
   useEffect(() => {
@@ -70,11 +69,10 @@ const ChatScreen = ({
   }, []);
 
   useEffect(() => {
-    // socketRef.current = io('http://192.168.1.48:9000')
-    console.log("Message datae ", messages);
+    // socketRef.current = io("http://192.168.1.48:9000");
+
     socketRef.current = io.connect("http://212.90.120.175:9000");
     socketRef.current.on("message", ({ message, sid, r_id, time, rid }) => {
-      console.log("messages ", { message, sid, r_id, time, rid });
       let msg = {
         text: message,
         user: { _id: sid },
@@ -116,7 +114,6 @@ const ChatScreen = ({
           GiftedChat.append(previousMessages, msg)
         );
       }
-      // console.log("messages ", msgList);
     } else if (status === 204) {
       loader(false);
       let newRoom = `${selectedRoom.id}_${user.id}`;
@@ -129,14 +126,17 @@ const ChatScreen = ({
       deviceId: `${selectedRoom.fcmToken}`,
       isAndroiodDevice: true,
       title: `${message}`,
-      body: `${user.username} message you...`,
+      body: `${user.userName} message you...`,
+      screenName: "chatStack",
+      senderData: JSON.stringify(user),
+      receiverData: JSON.stringify(selectedRoom),
     };
 
     // console.log(
     //   "Starting incoming call ",
     //   JSON.stringify(selectedRoom.fcmToken)
     // );
-    const notificationRes = await sendNotification(sendInComingCallRequest);
+    const notificationRes = await sendNotificationAPi(sendInComingCallRequest);
 
     console.log(
       "notificationRes incoming call ",
@@ -155,7 +155,7 @@ const ChatScreen = ({
     let sendMessageRes = await sendMessage(newMessage);
     let { status } = sendMessageRes;
     if (status === 200) {
-      //sendNotification(messages[0].text);
+      await sendNotification(messages[0].text);
     }
     socketRef.current.emit("message", {
       message: messages[0].text,

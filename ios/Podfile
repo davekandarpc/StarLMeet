@@ -25,6 +25,8 @@ target 'slmeet' do
 
   pod 'RNSound', :path => '../node_modules/react-native-sound'
 
+  pod 'RNReactNativeGetMusicFiles', :path => '../node_modules/react-native-get-music-files'
+
   target 'slmeetTests' do
     inherit! :complete
     # Pods for testing

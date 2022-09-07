@@ -33,7 +33,7 @@ export const userList = async (id) => {
     .catch((error) => console.log("error", error));
 };
 
-export const sendNotification = async (requestParams) => {
+export const sendNotificationAPi = async (requestParams) => {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   return fetch(`${API_BASE_URL}/notification/send`, {

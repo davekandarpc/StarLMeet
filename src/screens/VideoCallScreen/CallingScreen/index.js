@@ -9,17 +9,19 @@ import {
   Platform,
 } from "react-native";
 import CallActionBox from "../../../components/CallActionBox";
-//../../components/CallActionBox
+import { sendNotificationAPi } from "../../../utils/API";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import { Voximplant } from "react-native-voximplant";
+import withUser from "../../../redux/HOC/withUser";
+import withSelectedRoom from "../../../redux/HOC/withSelectedRoom";
 
 const permissions = [
   PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
   PermissionsAndroid.PERMISSIONS.CAMERA,
 ];
 
-const CallingScreen = ({ navigation }) => {
+const CallingScreen = ({ navigation, selectedRoom }) => {
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [callStatus, setCallStatus] = useState("Initializing...");
   const [localVideoStreamId, setLocalVideoStreamId] = useState("");
@@ -75,7 +77,25 @@ const CallingScreen = ({ navigation }) => {
         receiveAudio: true,
       },
     };
+    const sendNotification = async (message) => {
+      const sendInComingCallRequest = {
+        deviceId: `${selectedRoom.fcmToken}`,
+        isAndroiodDevice: true,
+        title: `${message}`,
+        body: `${user.user_name} Call you...`,
+        screenName: "calling",
+        senderData: JSON.stringify(user),
+        receiverData: JSON.stringify(selectedRoom),
+      };
+      const notificationRes = await sendNotificationAPi(
+        sendInComingCallRequest
+      );
 
+      console.log(
+        "notificationRes incoming call ",
+        JSON.stringify(notificationRes)
+      );
+    };
     const makeCall = async () => {
       call.current = await voximplant.call(user.user_name, callSettings);
       subscribeToCallEvents();
@@ -96,6 +116,7 @@ const CallingScreen = ({ navigation }) => {
         console.log("mic status ", callEvent);
       });
       call.current.on(Voximplant.CallEvents.ProgressToneStart, (callEvent) => {
+        sendNotification("inComing Calling.......");
         setCallStatus("Calling...");
       });
       call.current.on(Voximplant.CallEvents.Connected, (callEvent) => {
@@ -242,4 +263,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CallingScreen;
+export default withSelectedRoom(withUser(CallingScreen));

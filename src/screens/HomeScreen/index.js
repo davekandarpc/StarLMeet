@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList, TouchableOpacity, Text } from "react-native";
 import { styles } from "./styles";
+import { Voximplant } from "react-native-voximplant";
 import { SearchBar } from "../../components/SearchBarComponent";
 import { ListItem } from "../../components/ListItemComponent";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -8,29 +9,12 @@ import { userList } from "../../utils/API";
 import withUser from "../../redux/HOC/withUser";
 import withSelectedRoom from "../../redux/HOC/withSelectedRoom";
 
-const contactData = [
-  {
-    id: 1,
-    image: "",
-    userName: "Momin",
-    description: "Abc",
-    is_active: true,
-  },
-  {
-    id: 2,
-    image: "",
-    userName: "Kandarp",
-    description: "EFG",
-    is_active: true,
-  },
-];
-
 const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
   const [search, setSearch] = useState("");
   const [userName, setUserName] = useState("");
   const [contactList, setContactList] = useState([]);
   const [searchList, setSearchList] = useState([]);
-
+  const voximplant = Voximplant.getInstance();
   const getUserList = async () => {
     const userListRes = await userList(user.id);
     //console.log("Data: " + JSON.stringify(userListRes));
@@ -44,7 +28,7 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
         password: userListRes[i].password.trim(),
         description: userListRes[i].description.trim(),
         mobile: userListRes[i].mobile.trim(),
-        fcmToken: userListRes[i].fcmToken.trim(),
+        fcmToken: userListRes[i].fcmToken,
         status: userListRes[i].status,
         userTypeId: userListRes[i].userTypeId,
         createdAt: userListRes[i].createdAt,
@@ -59,14 +43,9 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
     AsyncStorage.getItem("userId").then((id) => {
       setUserName(user.id);
     });
-    //console.log("Login user ", user);
+    console.log("Login user ", JSON.stringify(user));
     getUserList();
   }, []);
-
-  useEffect(() => {
-    ////console.log("USer list ", contactList);
-    console.log("USer userName ", user.id);
-  }, [contactList, userName]);
 
   const searchTerm = () => {
     const result = searchList.filter((value) => {
@@ -78,7 +57,18 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
     });
     setContactList(result);
   };
+  useEffect(() => {
+    voximplant.on(Voximplant.ClientEvents.IncomingCall, (incomingCallEvent) => {
+      console.log("voximplant IncomingCall", incomingCallEvent);
+      navigation.navigate("VideoIncomingCallScreen", {
+        call: incomingCallEvent.call,
+      });
+    });
 
+    return () => {
+      voximplant.off(Voximplant.ClientEvents.IncomingCall);
+    };
+  }, []);
   useEffect(() => {
     searchTerm();
   }, [search]);

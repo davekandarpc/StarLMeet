@@ -7422,6 +7422,11 @@ react-native-gesture-handler@^2.5.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
+react-native-get-music-files@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-get-music-files/-/react-native-get-music-files-2.1.0.tgz#81d51ae08f659879db6fd00e982980a0dc3e5063"
+  integrity sha512-wNAhTAzzga55itaJx59RWRsPRNp8AkvFWs04gE2TzV3/z1Jbje3hB590JVjGlD6uNtVwstHcOAZwct35ZjURHg==
+
 react-native-get-random-values@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/react-native-get-random-values/-/react-native-get-random-values-1.8.0.tgz#1cb4bd4bd3966a356e59697b8f372999fe97cb16"
@@ -7480,6 +7485,11 @@ react-native-parsed-text@0.0.22:
   integrity sha512-hfD83RDXZf9Fvth3DowR7j65fMnlqM9PpxZBGWkzVcUTFtqe6/yPcIoIAgrJbKn6YmtzkivmhWE2MCE4JKBXrQ==
   dependencies:
     prop-types "^15.7.x"
+
+react-native-permissions@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.6.1.tgz#73adcc1cef8cd57a9ef167b4507405f4ff5749c4"
+  integrity sha512-fzPpPQXeD34inUccqtoResSwYubfrwUguP4qrVUUv8+KSMjYSaHGoS5HaIJLZHlN9gO+TvLJZ2L5ZljTsb6qnQ==
 
 react-native-push-notification@^8.1.1:
   version "8.1.1"

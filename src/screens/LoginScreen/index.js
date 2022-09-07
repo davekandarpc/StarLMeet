@@ -86,6 +86,8 @@ const LoginScreen = ({ navigation, setUser, loader, loaderState }) => {
         if (authLogin !== undefined) {
           if (status === 200) {
             const loginRes = await authLogin.json();
+
+            console.log("ij ", loginRes);
             setUser(loginRes);
             let voxUser = await getVoxUser(userName);
             let withjson = await voxUser.json();
