@@ -26,6 +26,7 @@ buildscript {
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("de.undercouch:gradle-download-task:4.1.2")
         classpath 'com.google.gms:google-services:4.3.13'
+        // classpath 'com.google.android.gms:play-services-gcm:17.0.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -47,6 +48,10 @@ allprojects {
             content {
                 excludeGroup "com.facebook.react"
             }
+        }
+         maven {
+            // Android JSC is installed from npm
+            url("$rootDir/../node_modules/@notifee/react-native/android/libs")
         }
         google()
         maven { url 'https://www.jitpack.io' }

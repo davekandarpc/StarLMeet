@@ -60,8 +60,10 @@ const ChatScreen = ({
     } else {
       roomID = `${user.id}_${selectedRoom.id}`;
     }
+    set_RoomID(roomID);
+
     getMessages(roomID);
-    console.log("slected room ", JSON.stringify(selectedRoom));
+    console.log("slected room ", JSON.stringify(roomID));
   }, [user, selectedRoom]);
 
   useEffect(() => {
@@ -92,7 +94,7 @@ const ChatScreen = ({
   const getMessages = async (roomID) => {
     loader(true);
     const messageResponse = await getMessageList(roomID);
-    console.log("rooom Data ", messageResponse);
+    // console.log("rooom Data ", messageResponse);
     const { status, data } = messageResponse;
     if (status === 200) {
       let res = await messageResponse.json();
@@ -116,6 +118,7 @@ const ChatScreen = ({
       }
     } else if (status === 204) {
       loader(false);
+
       let newRoom = `${selectedRoom.id}_${user.id}`;
       getMessages(newRoom);
     }
@@ -138,10 +141,10 @@ const ChatScreen = ({
     // );
     const notificationRes = await sendNotificationAPi(sendInComingCallRequest);
 
-    console.log(
-      "notificationRes incoming call ",
-      JSON.stringify(notificationRes)
-    );
+    // console.log(
+    //   "notificationRes incoming call ",
+    //   JSON.stringify(notificationRes)
+    // );
   };
 
   const onSend = useCallback(async (messages = [], roomId) => {
@@ -154,6 +157,8 @@ const ChatScreen = ({
     };
     let sendMessageRes = await sendMessage(newMessage);
     let { status } = sendMessageRes;
+    console.log("sendMessageRes ", sendMessageRes);
+    console.log("newMessage ", newMessage);
     if (status === 200) {
       await sendNotification(messages[0].text);
     }

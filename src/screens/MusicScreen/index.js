@@ -58,10 +58,22 @@ export default function MusicScreen({ navigation, route }) {
   };
 
   const getAssets = async () => {
-    await MusicFiles.getAll({})
+    await MusicFiles.getAll({
+      fields: [
+        "title",
+        "artwork",
+        "duration",
+        "artist",
+        "genre",
+        "lyrics",
+        "albumTitle",
+      ],
+    })
       .then((tracks) => {
         console.log("tracks: ", tracks);
-        setMusicFiles([...tracks]);
+        if (tracks !== "Something get wrong with musicCursor") {
+          setMusicFiles([...tracks]);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -71,6 +83,7 @@ export default function MusicScreen({ navigation, route }) {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATION,
         {
           title: "Permission for reading audio files on your device",
           message:
@@ -91,17 +104,10 @@ export default function MusicScreen({ navigation, route }) {
       console.warn(err);
     }
   };
-  const componentDidMount = () => {
-    // Permissions.request("storage").then((response) => {
-    //   console.log("response: ", response);
-    //   setStoragePermission(response);
-    // });
-  };
 
   useEffect(() => {
     // componentDidMount();
     requestStoragePermission();
-    // getAssets();
   }, []);
 
   const renderItem = ({ item, index }) => (

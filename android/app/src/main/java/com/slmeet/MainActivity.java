@@ -4,7 +4,7 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
-import io.wazo.callkeep.RNCallKeepModule;
+
 
 public class MainActivity extends ReactActivity {
 
@@ -28,19 +28,7 @@ public class MainActivity extends ReactActivity {
     return new MainActivityDelegate(this, getMainComponentName());
   }
 
-  // Permission results
-  @Override
-  public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-    if (grantResults.length > 0) {
-      switch (requestCode) {
-        case RNCallKeepModule.REQUEST_READ_PHONE_STATE:
-          RNCallKeepModule.onRequestPermissionsResult(requestCode, permissions, grantResults);
-          break;
-      }
-    }
-  }
+ 
 
   public static class MainActivityDelegate extends ReactActivityDelegate {
     public MainActivityDelegate(ReactActivity activity, String mainComponentName) {

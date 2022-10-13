@@ -6,6 +6,7 @@
  <!-- OPTIONAL PERMISSIONS, REMOVE WHATEVER YOU DO NOT NEED -->
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATION" />
 
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -72,13 +73,14 @@
         </intent-filter>
       </service>
         <!-- Change the value to true to enable pop-up for in foreground on receiving remote notifications (for prevent duplicating while showing local notifications set this to false) -->
-        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_foreground"
-                    android:value="false"/>
+        <!-- <meta-data  android:name="com.dieam.reactnativepushnotification.notification_foreground"
+                    android:value="false"/> -->
         <!-- Change the resource name to your App's accent color - or any other color you want -->
-        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
-                    android:resource="@color/white"/> <!-- or @android:color/{name} to use a standard color -->
+        <!-- <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
+                    android:resource="@color/white"/>  -->
+                    <!-- or @android:color/{name} to use a standard color -->
 
-        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions"  android:exported="false"
+        <!-- <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationActions"  android:exported="false"
             tools:node="merge" />
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher"  android:exported="false"
             tools:node="merge" />
@@ -99,6 +101,7 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
+        </service> -->
+       
     </application>
 </manifest>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, FlatList, TouchableOpacity, Text } from "react-native";
 import { styles } from "./styles";
 import { Voximplant } from "react-native-voximplant";
@@ -6,6 +6,7 @@ import { SearchBar } from "../../components/SearchBarComponent";
 import { ListItem } from "../../components/ListItemComponent";
 import AsyncStorage from "@react-native-community/async-storage";
 import { userList } from "../../utils/API";
+import { useIsFocused, useFocusEffect } from "@react-navigation/native";
 import withUser from "../../redux/HOC/withUser";
 import withSelectedRoom from "../../redux/HOC/withSelectedRoom";
 
@@ -15,7 +16,9 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
   const [contactList, setContactList] = useState([]);
   const [searchList, setSearchList] = useState([]);
   const voximplant = Voximplant.getInstance();
+
   const getUserList = async () => {
+    console.log("Data: " + JSON.stringify(user.id));
     const userListRes = await userList(user.id);
     //console.log("Data: " + JSON.stringify(userListRes));
     let userListDat = [];
@@ -39,13 +42,14 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
     setContactList(userListDat);
     setSearchList(userListDat);
   };
-  useEffect(() => {
-    AsyncStorage.getItem("userId").then((id) => {
-      setUserName(user.id);
-    });
-    console.log("Login user ", JSON.stringify(user));
-    getUserList();
-  }, []);
+
+  // useEffect(() => {
+  //   AsyncStorage.getItem("userId").then((id) => {
+  //     setUserName(user.id);
+  //   });
+  //   console.log("Login user ", JSON.stringify(user));
+  //   getUserList();
+  // }, []);
 
   const searchTerm = () => {
     const result = searchList.filter((value) => {
@@ -57,18 +61,47 @@ const HomeScreen = ({ navigation, user, setSelectedRoom }) => {
     });
     setContactList(result);
   };
-  useEffect(() => {
-    voximplant.on(Voximplant.ClientEvents.IncomingCall, (incomingCallEvent) => {
-      console.log("voximplant IncomingCall", incomingCallEvent);
-      navigation.navigate("VideoIncomingCallScreen", {
-        call: incomingCallEvent.call,
+  const isFocused = useIsFocused();
+  useFocusEffect(
+    useCallback(() => {
+      console.log("naviagate useFocusEffect ");
+      AsyncStorage.getItem("userId").then((id) => {
+        setUserName(user.id);
       });
-    });
+      console.log("Login user ", JSON.stringify(user));
+      getUserList();
+      voximplant.on(
+        Voximplant.ClientEvents.IncomingCall,
+        (incomingCallEvent) => {
+          console.log("voximplant IncomingCall", incomingCallEvent);
+          navigation.navigate("VideoIncomingCallScreen", {
+            call: incomingCallEvent.call,
+          });
+        }
+      );
 
-    return () => {
-      voximplant.off(Voximplant.ClientEvents.IncomingCall);
-    };
-  }, []);
+      return () => {
+        voximplant.off(Voximplant.ClientEvents.IncomingCall);
+      };
+    }, [])
+  );
+  // useEffect(() => {
+  //   console.log("voximplant IncomingCall", voximplant);
+
+  //   if (isFocused) {
+  //     console.log("naviagate back");
+  //   }
+  //   voximplant.on(Voximplant.ClientEvents.IncomingCall, (incomingCallEvent) => {
+  //     console.log("voximplant IncomingCall", incomingCallEvent);
+  //     navigation.navigate("VideoIncomingCallScreen", {
+  //       call: incomingCallEvent.call,
+  //     });
+  //   });
+
+  //   return () => {
+  //     voximplant.off(Voximplant.ClientEvents.IncomingCall);
+  //   };
+  // }, []);
   useEffect(() => {
     searchTerm();
   }, [search]);

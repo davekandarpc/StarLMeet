@@ -8,6 +8,7 @@ import Global from "../components/Global";
 import notifee, {
   EventType,
   AndroidLaunchActivityFlag,
+  AuthorizationStatus,
 } from "@notifee/react-native";
 import { Voximplant } from "react-native-voximplant";
 import messaging from "@react-native-firebase/messaging";
@@ -66,6 +67,8 @@ const App = () => {
     await messaging().onMessage(onMessageReceived);
   };
 
+  checkNotificationPermission = async () => {};
+
   useEffect(() => {
     messaging()
       .getInitialNotification()
@@ -91,6 +94,14 @@ const App = () => {
           });
         }
       });
+
+    // const settings = notifee.getNotificationSettings();
+
+    // if (settings.authorizationStatus == AuthorizationStatus.AUTHORIZED) {
+
+    // } else if (settings.authorizationStatus == AuthorizationStatus.DENIED) {
+    //   console.log("Notification permissions has been denied");
+    // }
   }, []);
 
   return (
